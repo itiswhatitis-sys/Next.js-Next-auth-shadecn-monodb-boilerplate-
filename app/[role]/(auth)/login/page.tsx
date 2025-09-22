@@ -1,9 +1,19 @@
 import { LoginPageView } from "@/app/components/LoginPage";
+import { notFound } from "next/navigation"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-const LoginPage = async () => {
+
+const validRoles = ["supplier", "logistic", "owner"]
+
+const LoginPage = async ({ params }: { params: { role: string } }) => {
+
+   const { role } = params
+
+    if (!validRoles.includes(role)) {
+    notFound()
+  } 
   //   const session = await getServerSession(authOptions);
 
   // if (session) {

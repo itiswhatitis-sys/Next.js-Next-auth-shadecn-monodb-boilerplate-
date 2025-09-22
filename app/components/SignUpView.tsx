@@ -38,7 +38,7 @@ const formSchema = z
     path: ["confirmpassword"],
   });
 
-export const SignUpView = () => {
+export const SignUpView = ( { role }: { role: "supplier" | "logistic" | "owner" }) => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -64,6 +64,7 @@ export const SignUpView = () => {
           name: values.name,
           email: values.email,
           password: values.password,
+          role
         }),
       });
 
@@ -77,7 +78,7 @@ export const SignUpView = () => {
       });
 
       if (loginRes?.ok) {
-        router.push("/dashboard");
+         router.push(`/${role}/dashboard`);
       } else {
         throw new Error("Login failed after signup");
       }
@@ -203,9 +204,9 @@ export const SignUpView = () => {
           </Form>
 
           {/* Side Panel */}
-          <div className="bg-radial from-green-700 to-green-900 hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="logo" className="h-[92px] w-[92px]" />
-            <p className="text-2xl font-semibold text-white/90 pt-0"> SME</p>
+          <div className="bg-gradient-to-r from-slate-900 to-slate-700 hidden md:flex flex-col gap-y-4 items-center justify-center">
+            {/* <img src="/logo.svg" alt="logo" className="h-[92px] w-[92px]" />
+            <p className="text-2xl font-semibold text-white/90 pt-0"> SME</p> */}
           </div>
         </CardContent>
       </Card>
