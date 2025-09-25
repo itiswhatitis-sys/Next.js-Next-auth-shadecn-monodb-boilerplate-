@@ -9,7 +9,7 @@ const validRoles = ["supplier", "logistic", "owner"]
 
 const LoginPage = async ({ params }: { params: { role: string } }) => {
 
-   const { role } = params
+   const { role } = await params
 
     if (!validRoles.includes(role)) {
     notFound()

@@ -5,9 +5,9 @@ import { notFound } from "next/navigation"
 
 const validRoles = ["supplier", "logistic", "owner"]
 
-const SignInPage  = ({ params }: { params: { role: string } }) => {
+const SignInPage  =async ({ params }: { params: { role: string } }) => {
 
-   const { role } = params
+   const { role } = await params ;
   
    if (!validRoles.includes(role)) {
       notFound()
