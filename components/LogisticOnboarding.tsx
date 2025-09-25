@@ -74,7 +74,7 @@ export default function LogisticrOnboardFlow() {
   }
     if (!session) {
       console.log("no session");
-      router.push("/supplier/login");
+      router.push("/logistic/login");
     } else if (session.user?.role !== "logistic") {
       router.push("/unauthorized");
     }

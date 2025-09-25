@@ -44,20 +44,22 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = (user as any).role ?? "user"; // cast needed
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
+ callbacks: {
+  async jwt({ token, user }) {
+    if (user) {
+      token.role = (user as any).role ?? "user";
+      token.id = (user as any)._id ?? (user as any).id; // add user id
+    }
+    return token;
   },
+  async session({ session, token }) {
+    if (token && session.user) {
+      session.user.role = token.role as string;
+      session.user.id = token.id as string; // add id to session
+    }
+    return session;
+  },
+},
   pages: {
     signIn: "/login",
   },

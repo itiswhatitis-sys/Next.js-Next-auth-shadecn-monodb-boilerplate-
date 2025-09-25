@@ -24,12 +24,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
-export const LoginPageView = () => {
+interface LoginPageViewProps {
+  role: string
+}
+
+
+export const LoginPageView = ({ role }: LoginPageViewProps) => {
   
   const router = useRouter();
   const [error, setError] = useState("");
@@ -55,8 +61,9 @@ export const LoginPageView = () => {
       setError("Invalid email or password.");
       setPending(false);
     } else {
+      toast("Successfully Logged In")
       setPending(false);
-      router.push("/dashboard"); // change to your desired route
+      router.push(`/${role}/dashboard`); // change to your desired route
     }
   };
 
