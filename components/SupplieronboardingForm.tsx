@@ -132,7 +132,7 @@ const onSkipTeam = async () => {
 
     if (result.success) {
       console.log("Company saved successfully (team skipped)");
-      router.push('/supplier');
+      router.push('/supplier/dashboard');
     } else {
       console.error("Error saving company:", result.error);
     }

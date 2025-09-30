@@ -89,3 +89,29 @@ export async function deleteTeamMember(id: string) {
     return { error: "Failed to delete team member." }
   }
 }
+
+export async function getTeamRoleByEmail(email: string): Promise<string | null> {
+  // Ensure the database connection is established
+  try {
+    await connect();
+  } catch (error) {
+    console.error("Failed to connect to the database:", error);
+    return null;
+  }
+
+  try {
+    // Find a single team member by their email
+    const teamMember = await TeamMember.findOne({ email }).select("teamRole");
+
+    // If a team member is found, return their teamRole
+    if (teamMember) {
+      return teamMember.teamRole || null;
+    }
+
+    // If no team member is found, return null
+    return null;
+  } catch (error) {
+    console.error("Error fetching team role:", error);
+    return null;
+  }
+}

@@ -1,4 +1,5 @@
 import connect from '@/lib/db';
+import Notification from '@/lib/models/notifications';
 import Shipment from '@/lib/models/shipment';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -62,6 +63,19 @@ export async function POST(request: NextRequest) {
     });
 
     const savedShipment = await newShipment.save();
+
+    // Create a new notification for each invitee
+    if (savedShipment.invitees && savedShipment.invitees.length > 0) {
+        const notifications = savedShipment.invitees.map((invitee: { email: any; role: any; }) => ({
+            recipientEmail: invitee.email,
+            senderEmail: savedShipment.ownerEmail,
+            shipmentId: savedShipment.shipmentId,
+            type: "invitation",
+            role: invitee.role,
+        }));
+
+        await Notification.insertMany(notifications);
+    }
 
     return NextResponse.json(
       {

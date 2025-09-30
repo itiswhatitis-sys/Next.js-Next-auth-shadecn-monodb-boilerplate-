@@ -24,14 +24,21 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { signOut } from 'next-auth/react';
 
-interface SidebarProps {
-  onLogout: () => void;
-}
 
-export function Sidebar({ onLogout }: SidebarProps) {
+
+export function Sidebar() {
   const pathname = usePathname();
   const [openCampaigns, setOpenCampaigns] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut({ callbackUrl: "/" }) // redirects automatically
+    } catch (error) {
+      console.error("Logout failed:", error)
+    }
+  }
 
   const isActive = (path: string) => {
     return pathname === path || pathname?.startsWith(`${path}/`);
@@ -61,7 +68,7 @@ export function Sidebar({ onLogout }: SidebarProps) {
       
       <div className="flex-1 py-6 px-4 space-y-6">
         <div className="space-y-1">
-          <NavItem path="/dashboard" label="Dashboard" icon={LayoutDashboard} />
+          <NavItem path="/supplier/dashboard" label="Dashboard" icon={LayoutDashboard} />
           
           <Collapsible
             open={openCampaigns}
@@ -70,9 +77,9 @@ export function Sidebar({ onLogout }: SidebarProps) {
           >
             <CollapsibleTrigger asChild>
               <Button
-                variant={isActive('/campaigns') ? "default" : "ghost"}
+                variant={isActive('/supplier/shipment') ? "default" : "ghost"}
                 className={`w-full justify-between ${
-                  isActive('/shipment') ? 'bg-primary text-primary-foreground' : ''
+                  isActive('/supplier/shipment') ? 'bg-primary text-primary-foreground' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -84,33 +91,33 @@ export function Sidebar({ onLogout }: SidebarProps) {
             </CollapsibleTrigger>
             <CollapsibleContent className="pl-9 mt-1 space-y-1">
               <Link 
-                href="/campaigns" 
+                href="/supplier/shipment" 
                 className={`block py-2 px-3 rounded-md transition-colors ${
-                  pathname === '/campaigns' ? 'bg-muted font-medium' : 'hover:bg-muted'
+                  pathname === '/supplier/shipment' ? 'bg-muted font-medium' : 'hover:bg-muted'
                 }`}
               >
                 All Shipment
               </Link>
               <Link 
-                href="/campaigns/create" 
+                href="/supplier/shipment/track" 
                 className={`block py-2 px-3 rounded-md transition-colors ${
                   pathname === '/campaigns/create' ? 'bg-muted font-medium' : 'hover:bg-muted'
                 }`}
               >
-                Create Shipment
+                Track Shipment
               </Link>
             </CollapsibleContent>
           </Collapsible>
-            <NavItem path="/logistics" label="Logistics" icon={Users} />
-          <NavItem path="/team" label="Team" icon={FileText} />
-          <NavItem path="/profile" label="Company Profile" icon={Settings} />
+            <NavItem path="/supplier/notifications" label="Notifcations" icon={Users} />
+          <NavItem path="/supplier/team" label="Team" icon={FileText} />
+          <NavItem path="/supplier/profile" label="Company Profile" icon={Settings} />
         </div>
       </div>
       
       <div className="p-4 border-t mt-auto">
         <div className="flex items-center justify-between">
           <ThemeToggle />
-          <Button variant="ghost" size="icon" onClick={onLogout}>
+          <Button variant="ghost" size="icon" onClick={handleLogout}>
             <LogOut className="h-5 w-5" />
           </Button>
         </div>

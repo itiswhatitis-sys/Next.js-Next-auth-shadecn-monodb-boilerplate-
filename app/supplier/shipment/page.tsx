@@ -9,10 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { Plus, FileText, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { getShipmentsByOwner } from '@/app/actions/getShipmentDetails';
+import { getSupplierShipments } from '@/app/actions/getSupplierShipment';
+import Shipment from '@/lib/models/shipment';
 
 interface Shipment {
-  _id: string;
+//   _id: string;
   shipmentId: string;
   title: string;
   description: string;
@@ -25,25 +26,25 @@ interface Shipment {
   };
 }
 
-export default function ShipmentsPage() {
+export default function SupplierShipmentsPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-
   // Helper to fetch shipments
-const fetchShipments = async (email: string) => {
-  try {
-    setIsLoading(true);
-    const data = await getShipmentsByOwner(email); // now returns plain objects
-    setShipments(data);
-  } catch (error) {
-    console.error("Failed to fetch shipments:", error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  const fetchShipments = async (email: string) => {
+    try {
+      setIsLoading(true);
+      const data = await getSupplierShipments(email);
+      setShipments(data);
+      console.log('oomberyy',shipments);
+    } catch (error) {
+      console.error("Failed to fetch shipments:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Effect to fetch when session email is available
   useEffect(() => {
@@ -88,12 +89,12 @@ const fetchShipments = async (email: string) => {
       <div className="md:ml-64 p-4 md:p-8">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Shipments</h1>
-            <p className="text-muted-foreground">Manage your shipments</p>
+            <h1 className="text-3xl font-bold tracking-tight">Assigned Shipments</h1>
+            <p className="text-muted-foreground">View shipments you are invited to manage</p>
           </div>
-          <Button onClick={() => router.push('/shipment/create')}>
+          {/* <Button onClick={() => router.push('/shipment/create')}>
             <Plus className="mr-2 h-4 w-4" /> Create Shipment
-          </Button>
+          </Button> */}
         </div>
 
         {isLoading ? (
@@ -114,22 +115,19 @@ const fetchShipments = async (email: string) => {
           <Card className="text-center p-8">
             <CardContent className="pt-8 pb-8">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No shipments yet</h3>
+              <h3 className="text-lg font-medium mb-2">No assigned shipments</h3>
               <p className="text-muted-foreground mb-4">
-                Create your first shipment to start tracking
+                You have not been assigned to any shipments yet, or have not accepted any invitations.
               </p>
-              <Button onClick={() => router.push('/shipments/create')}>
-                <Plus className="mr-2 h-4 w-4" /> Create Shipment
-              </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {shipments.map((shipment) => (
               <Card
-                key={shipment._id}
+                key={shipment.shipmentId}
                 className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-200"
-                onClick={() => router.push(`/owner/shipment/${shipment._id}`)}
+                onClick={() => router.push(`/supplier/shipment/${shipment.shipmentId}`)}
               >
                 <CardHeader className="pb-2 flex justify-between items-start">
                   <div>

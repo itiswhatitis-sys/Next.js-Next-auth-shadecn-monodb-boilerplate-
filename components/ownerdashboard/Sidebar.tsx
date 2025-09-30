@@ -59,7 +59,7 @@ const handleLogout = async () => {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       <div className="p-4 border-b">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <span className="text-xl font-bold text-primary">INTERAIN</span>
         </Link>
       </div>

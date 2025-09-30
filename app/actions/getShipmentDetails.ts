@@ -1,7 +1,7 @@
 "use server";
 
 import connect from "@/lib/db";
-import Shipment from "@/lib/models/shipment";
+import Shipment, { IShipment } from "@/lib/models/shipment";
 
 export async function getShipmentsByOwner(ownerEmail: string) {
   if (!ownerEmail) {
@@ -29,5 +29,24 @@ export async function fetchShipmentDetailsById(id: string) {
   } catch (error) {
     console.error(`Error fetching shipment with ID ${id}:`, error)
     return { error: "Failed to fetch shipment details." }
+  }
+}
+
+
+
+
+export async function getShipmentDetailsByshipmentId(id: string) {
+  try {
+    await connect();
+    const shipment = await Shipment.findOne({ shipmentId: id }).lean(); // Use findOne and lean for performance
+    
+    if (!shipment) {
+      return { error: "Shipment not found." };
+    }
+    
+    return JSON.parse(JSON.stringify(shipment)) as IShipment;
+  } catch (error) {
+    console.error(`Error fetching shipment with ID ${id}:`, error);
+    return { error: "Failed to fetch shipment details." };
   }
 }

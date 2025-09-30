@@ -18,8 +18,9 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import Link from 'next/link'
-import { fetchCompanyProfileByEmail } from '@/app/actions/getCompanyDetails'
+
 import { useSession } from 'next-auth/react'
+import { fetchCompanyProfileByEmail } from '@/app/actions/getSupplierCompanies'
 
 interface CompanyProfile {
   _id: string
@@ -60,6 +61,7 @@ useEffect(() => {
         setProfile(null)
       } else {
         setProfile(data as CompanyProfile)
+        console.log(profile)
       }
     } catch (error) {
       console.error('Error fetching profile:', error)
@@ -69,22 +71,11 @@ useEffect(() => {
     }
   }
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-      });
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-      toast.success('You have been successfully logged out');
-      router.push('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      toast.error('Failed to logout. Please try again.');
-    }
-  };
+// if (!data){
+//    toast.error('You havent completed onboarding , fill onboarding')
+//    router.push('/supplier/onboarding')
 
+// }
 
 
   if (isLoadingProfile) {

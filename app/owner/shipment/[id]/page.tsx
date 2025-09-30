@@ -190,7 +190,7 @@ export default function ShipmentDetailsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar onLogout={handleLogout} />
+      {/* <Sidebar onLogout={handleLogout} /> */}
       
       <div className="md:ml-64 p-4 md:p-8">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
